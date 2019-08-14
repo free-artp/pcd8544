@@ -1,0 +1,18 @@
+{
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "Cortex Debug (OpenOCD)",
+			"cwd": "${workspaceRoot}",
+			"executable": "./build/${workspaceFolderBasename}.elf",
+			"request": "launch",
+			"type": "cortex-debug",
+			"servertype": "openocd",
+			"device": "Cortex-M4",
+			"svdFile": "./board/STM32F407.svd" ,
+			"configFiles": [
+				"./board/stm32f4discovery.cfg",
+			]
+		}
+	]
+}

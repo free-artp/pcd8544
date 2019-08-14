@@ -1,0 +1,29 @@
+{
+    "configurations": [
+        {
+            "name": "arm_c_cpp_properties",
+            "compilerPath": "C:/tools/GNU MCU Eclipse/ARM Embedded GCC/8.2.1-1.4-20190214-0604/bin/arm-none-eabi-gcc.exe",
+            "includePath": [
+                "C:/tools/GNU MCU Eclipse/ARM Embedded GCC/8.2.1-1.4-20190214-0604/arm-none-eabi/include",
+                "C:/tools/GNU MCU Eclipse/ARM Embedded GCC/8.2.1-1.4-20190214-0604/arm-none-eabi/include/sys",
+                "C:/tools/GNU MCU Eclipse/ARM Embedded GCC/8.2.1-1.4-20190214-0604/lib/**",
+                "${workspaceRoot}/cmsis/**",
+                "${workspaceRoot}/cmsis_boot/**",
+                "${workspaceRoot}/cmsis_lib/include/**",
+                "${workspaceRoot}/src",
+                "${workspaceRoot}/"
+            ],
+            "defines": [
+				"STM32F407VG",
+                "STM32F4XX",
+                "USE_STDPERIPH_DRIVER",
+				"M4",
+				"GCC_ARMCM4"
+            ],
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+			"intelliSenseMode": "gcc-x64"
+        }
+    ],
+    "version": 4
+}
