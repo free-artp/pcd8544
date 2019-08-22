@@ -44,7 +44,7 @@
 
 // ЕСЛИ ВЫ ТОЛЬКО ПРОБУЕТЕ ПОДКЛЮЧИТЬ ДИСПЛЕЙ ПОСТАВЬТЕ ЗНАЧЕНИЕ "SPI_BaudRatePrescaler_8"
 //                              +-----------------------+
-#define SPI2_BaudRatePrescaler   SPI_BaudRatePrescaler_4		// делитель SPI2
+#define SPI2_BaudRatePrescaler   SPI_BaudRatePrescaler_8		// делитель SPI2
 //                              +-----------------------+
 
 

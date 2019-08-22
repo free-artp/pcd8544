@@ -37,58 +37,13 @@
 		{
 			"label": "Write to Flash MCU",
 			"type": "shell",
-			"command": "openocd -f board/stm32f4discovery.cfg -c \"program ./build/${workspaceFolderBasename}.elf verify reset exit\"",
-			"options": {
-				"cwd": "${workspaceRoot}",
-				"shell": {
-					"executable": "cmd.exe",
-					"args": ["/C"]
-				}
-			}, 
-			"group": {
-				"kind": "test",
-				"isDefault": true
+			"windows":{
+				"command": "openocd -f board/stm32f4discovery.cfg -c \"program ./build/${workspaceFolderBasename}.elf verify reset exit\""
 			},
-			"problemMatcher": []
-		},
-		{
-			"label": "Read Flash from MCU",
-			"type": "shell",
-			"command": "JLink.exe -Device STM32F407VG -If SWD -Speed 1000 JLink\\ReadMCU.jlink",
-			"options": {
-				"cwd": "${workspaceRoot}",
-				"shell": {
-					"executable": "cmd.exe",
-					"args": ["/C"]
-				}
-			}, 
-			"group": {
-				"kind": "test",
-				"isDefault": true
-			},
-			"problemMatcher": []
-		},
-		{
-			"label": "Erase Flash MCU",
-			"type": "shell",
-			"command": "JLink.exe -Device STM32F407VG -If SWD -Speed 1000 JLink\\EraseMCU.jlink",
-			"options": {
-				"cwd": "${workspaceRoot}",
-				"shell": {
-					"executable": "cmd.exe",
-					"args": ["/C"]
-				}
-			}, 
-			"group": {
-				"kind": "test",
-				"isDefault": true
-			},
-			"problemMatcher": []
-		},
-		{
-			"label": "Reset MCU",
-			"type": "shell",
-			"command": "JLink.exe -Device STM32F407VG -If SWD -Speed 1000 JLink\\ResetMCU.jlink",
+			"linux":{
+				"command":""
+			}
+			,
 			"options": {
 				"cwd": "${workspaceRoot}",
 				"shell": {

@@ -6,6 +6,8 @@
 
 #include "pcd8544.h"
 
+#include "text.h"
+
 // Переменные и структуры
 volatile unsigned int delay_val;        // счетчик для delay_ms()
 volatile unsigned int counter1000;      // счетчик интервалов (такт 10 мкс)
@@ -29,9 +31,9 @@ void delay_10us(unsigned int delay_value) {
 	while (delay_val!=0);
 }
 
-const unsigned char str1[]="NOKIA 5110";
-const unsigned char str2[]="СТАРТОВАЛ";
-const unsigned char str3[]="РУССКИЕ БУКВЫ!";
+// const unsigned char str1[]="NOKIA 5110";
+// const unsigned char str2[]="СТАРТОВАЛ";
+// const unsigned char str3[]="РУССКИЕ БУКВЫ!";
 
 int main(void)
 {
