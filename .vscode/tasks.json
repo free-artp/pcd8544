@@ -9,13 +9,18 @@
 				"cwd": "${workspaceRoot}",
 				"shell": {
 					"executable": "cmd.exe",
-					"args": ["/C"]
+					"args": [
+						"/C"
+					]
 				}
-            }, 
+			},
 			"group": {
 				"kind": "build",
 				"isDefault": true
-			}
+			},
+			"problemMatcher": [
+				"$gcc"
+			]
 		},
 		{
 			"label": "Make Clean",
@@ -25,32 +30,35 @@
 				"cwd": "${workspaceRoot}",
 				"shell": {
 					"executable": "cmd.exe",
-					"args": ["/C"]
+					"args": [
+						"/C"
+					]
 				}
-            }, 
+			},
 			"group": {
 				"kind": "build",
 				"isDefault": true
 			},
-            "problemMatcher": []
+			"problemMatcher": []
 		},
 		{
 			"label": "Write to Flash MCU",
 			"type": "shell",
-			"windows":{
+			"windows": {
 				"command": "openocd -f board/stm32f4discovery.cfg -c \"program ./build/${workspaceFolderBasename}.elf verify reset exit\""
 			},
-			"linux":{
-				"command":""
-			}
-			,
+			"linux": {
+				"command": ""
+			},
 			"options": {
 				"cwd": "${workspaceRoot}",
 				"shell": {
 					"executable": "cmd.exe",
-					"args": ["/C"]
+					"args": [
+						"/C"
+					]
 				}
-			}, 
+			},
 			"group": {
 				"kind": "test",
 				"isDefault": true
@@ -65,14 +73,16 @@
 				"cwd": "${workspaceRoot}",
 				"shell": {
 					"executable": "cmd.exe",
-					"args": ["/C"]
+					"args": [
+						"/C"
+					]
 				}
-			}, 
+			},
 			"group": {
 				"kind": "test",
 				"isDefault": true
 			},
 			"problemMatcher": []
-		  }
+		}
 	]
 }

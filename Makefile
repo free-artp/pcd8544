@@ -44,6 +44,7 @@ cmsis_lib/source/stm32f4xx_dma.c \
 cmsis_lib/source/stm32f4xx_gpio.c \
 cmsis_lib/source/stm32f4xx_rcc.c \
 cmsis_lib/source/stm32f4xx_spi.c \
+cmsis_lib/source/stm32f4xx_adc.c \
 src/pcd8544.c
 
 
