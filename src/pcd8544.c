@@ -208,6 +208,39 @@ void lcd8544_init(void) {
 }
 
 
+/*
+Дисплей имеет размер 84х48 пикселей. Информация выводится вертикальными блоками высотой 8 пикселей,
+значения которых определяются значениями бит в выводимом байте. Младший бит кодирует верхний пиксель.
+Таким образом, графическая область дисплея представлена в виде шести строк, каждая по 8 пикселей в высоту.
+
+Команды 01000yyy и 1xxxxxxx определяют координаты курсора - строку и позицию, в которых будет отображены следующие 8 бит данных.
+После того как байт выведен, курсор смещается на соседнюю позицию.
+
+unsigned char lcd8544_buff[84*6]; // буфер дисплея
+
+buffer			0	1	2
+y			x-	0	1	2	3	4	5
+0	младший бит	.	.
+1				.	.
+2				.	.
+3				.	.
+4				.	.
+5				.	.
+6				.	.
+7	старший бит	.	.
+	-----------------------
+	buffer		84	85	86
+			x-	0	1	2	3	4	5
+8	младший бит	.	.
+9				.	.
+10				.	.
+11				.	.
+12				.	.
+13				.	.
+14				.	.
+15	старший бит	.	.
+
+*/
 
 // вывод пиксела
 void lcd8544_putpix(unsigned char x, unsigned char y, unsigned char mode) {
@@ -220,7 +253,15 @@ void lcd8544_putpix(unsigned char x, unsigned char y, unsigned char mode) {
    else lcd8544_buff[adr]&=~data;
 }
 
-
+void lcd8544_shift_left(unsigned char dx){
+	unsigned int addr,y;
+	for (y=0; y < 6; y++ ) {
+		for (addr = y*84 + dx; addr < y*84 + 83; addr++) {
+			lcd8544_buff[addr-dx] = lcd8544_buff[addr];
+			lcd8544_buff[addr] = 0;
+		}
+	}
+}
 
 // процедура рисования линии
 void lcd8544_line(unsigned char x1, unsigned char y1, unsigned char x2, unsigned char y2, unsigned char mode) {

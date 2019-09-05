@@ -1,0 +1,260 @@
+
+<!-- saved from url=(0034)https://aterlux.ru/article/pcd8544 -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>﻿Подключение дисплея на базе контроллера PCD8544 к микроконтроллеру AVR</title>
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" href="./_Подключение дисплея на базе контроллера PCD8544 к микроконтроллеру AVR_files/style.css">
+ </head>
+ <body>
+  <table cellspacing="0" cellpadding="0" class="pagebound" width="100%" height="100%">
+   <tbody><tr width="100%">
+    <td valign="TOP" align="LEFT" width="100%">
+<div class="article">
+<h1>﻿Подключение дисплея на базе контроллера PCD8544 к микроконтроллеру AVR</h1>
+<div class="contents">
+<a href="https://aterlux.ru/article/pcd8544#__h2_1">О дисплеях</a><br>
+<a href="https://aterlux.ru/article/pcd8544#__h2_2">О контроллере</a><br>
+<a href="https://aterlux.ru/article/pcd8544#__h2_3">Подключение</a><br>
+<a href="https://aterlux.ru/article/pcd8544#__h2_4">Команды контроллера</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://aterlux.ru/article/pcd8544#__h3_5">Обычный набор команд</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://aterlux.ru/article/pcd8544#__h3_6">Расширенный набор команд</a><br>
+<a href="https://aterlux.ru/article/pcd8544#__h2_7">Инициализация дисплея</a><br>
+<a href="https://aterlux.ru/article/pcd8544#__h2_8">Вывод графической информации</a><br>
+<a href="https://aterlux.ru/article/pcd8544#__h2_9">Исходный код прошивки для AtmelStudio 6</a><br>
+</div>
+<br>
+<p>Автор: Погребняк Дмитрий</p>
+<p>Самара, 2014.</p>
+<br>
+<a name="__h2_1"></a><h2>О дисплеях</h2>
+<br>
+<center><iframe width="480" height="360" src="./_Подключение дисплея на базе контроллера PCD8544 к микроконтроллеру AVR_files/VWVvKVIVqeg.html" frameborder="0" allowfullscreen=""></iframe></center>
+<br>
+<p>Популярные в своё время сотовые телефоны фирмы Nokia, такие модели, как 3210 3310 3315 3330 3350 3410 5110 5120 5130 5160 6150 6210, обладали монохромными графическими дисплеями, с экраном 84x48 точек, на базе контроллера PCD8544. </p>
+<br>
+<p><table width="1" cellspacing="0" cellpadding="0" class="imgtable" align="right" style="margin-left:10px; align:right"><tbody><tr class="imgtable"><td class="imgtable"><a href="https://aterlux.ru/articles/img/fullsize/pcd8544_module1.jpg" target="_blank" title="Нажмите, чтобы посмотреть в полном размере"><img src="./_Подключение дисплея на базе контроллера PCD8544 к микроконтроллеру AVR_files/pcd8544_module1.jpg" alt="Модуль с дисплеем Nokia 5110" class="artimg"></a></td></tr><tr width="1" class="imgtablelabel"><td class="imgtablelabel">Модуль с дисплеем Nokia 5110</td></tr></tbody></table></p>
+<p>Времена этих телефонов прошли, но дисплеи не канули в Лету, они оказались чрезвычайно удобным и дешёвым вариантом для вывода графической и текстовой информации, при использовании в сочетании с микроконтроллерами.</p>
+<br>
+<p>Сейчас на ebay можно за порядка 100 рублей (вместе с доставкой) <a href="http://www.ebay.com/sch/i.html?_from=R40%7CR40&amp;_sacat=0&amp;_sop=15&amp;_nkw=nokia+5110+display&amp;rt=nc&amp;LH_BIN=1" target="_blank">купить такой дисплей</a>, установленный на печатную плату 45х45мм, которая также обеспечивает подсветку. </p>
+<br>
+<br>
+<p>О подключении таких дисплеев, на базе контроллера PCD8544, и пойдёт речь ниже.</p>
+<br>
+<a name="__h2_2"></a><h2>О контроллере</h2>
+<br>
+<p>Контроллер PCD8544 разработан фирмой PHILIPS. Документацию на него можно скачать <a href="https://www.sparkfun.com/datasheets/LCD/Monochrome/Nokia5110.pdf">здесь</a></p>
+<br>
+<p>Одной из особенностей этого контроллера является то, что информация может быть только выведена на дисплей, но не считана с него.  В частности, это накладывает два ограничения:</p>
+<p class="hyphen">-&nbsp;Нет возможности узнать состояние дисплея, в т.ч. и вообще факт его присутствия программными средствами. Это требует точного соблюдения таймингов при выводе информации. К счастью контроллер может работать на достаточно большой скорости и это не является проблемой.</p>
+<p class="hyphen">-&nbsp;Невозможно работать с изображением в режиме «чтение-изменение-запись». Вывод сложного изображения, где потребуется совмещение разной графической информации, может быть осуществлён только с использованием внеэкранного буфера, или предварительного полного расчёта совмещения изображений.</p>
+<br>
+<p>В то же время, контроллер обеспечивает крайне низкое энергопотребление: менее 300мкА (с типичными дисплеями Nokia) в рабочем режиме, и около 1.5мкА в режиме отключения. </p>
+<br>
+<p>Контроллер имеет встроенный генератор повышенного напряжения, поэтому отдельно подводить напряжение для питания дисплея не требуется.</p>
+<br>
+<p>Сам же контроллер работает при напряжении 2,7 – 3,3 Вольта.</p>
+<br>
+<a name="__h2_3"></a><h2>Подключение</h2>
+<br>
+<p></p><center><table width="1" cellspacing="0" cellpadding="0" class="imgtable" style="margin-right:10px; align:center"><tbody><tr class="imgtable"><td class="imgtable"><img src="./_Подключение дисплея на базе контроллера PCD8544 к микроконтроллеру AVR_files/pcd8544_con.png" alt="Подключение модуля дисплея на базе PCD8544" class="artimg"></td></tr><tr width="1" class="imgtablelabel"><td class="imgtablelabel">Подключение модуля дисплея на базе PCD8544</td></tr></tbody></table></center><p></p>
+<br>
+<p>Как упоминалось выше, контроллер работает на напряжении 2,7 – 3,3 Вольта. Это значит что сопряжённый микроконтроллер должен либо работать на том же напряжении, либо же как-то согласовать уровни на выводах, например, при помощи делителей.</p>
+<br>
+<p>Кроме «земли» и «питания», к контроллеру дисплея должны идти 5 линий:</p>
+<p>* <b>SCLK</b> - тактовый импульс для передачи данных.</p>
+<p>* <b>SDIN</b> - передаваемые данные.</p>
+<p>* <b>D/C̅</b> - выбор типа передаваемых данных: высокий уровень - графические данные, низкий - инструкция.</p>
+<p>* <b>S̅C̅E̅</b> - выбор чипа. Передача данных осуществляется при низком уровне на этой линии. При высоком уровне данные игнорируются.</p>
+<p>* <b>R̅E̅S̅</b> - сброс. При низком уровне происходит аппаратный сброс контроллера.</p>
+<br>
+<p>Поскольку, согласно спецификации (см п.8.1) <b>аппаратный сброс является необходимым</b> для инициализации дисплея, линия <b>R̅E̅S̅</b> также должна быть подключена. </p>
+<br>
+<p>В принципе, линия <b>S̅C̅E̅</b> может быть притянута постоянно к земле, но в этом случае, если по какой либо причине контроллер дисплея потерял синхронизацию с МК, это никак не удастся обнаружить. При подключении к МК, рекомендую притягивать эту линию к высокому уровню подтягивающим резистором 100-500кОм, чтобы исключить реакцию контроллера на помехи, пока МК находится в состоянии сброса.</p>
+<br>
+<p><table width="1" cellspacing="0" cellpadding="0" class="imgtable" align="right" style="margin-left:10px; align:right"><tbody><tr class="imgtable"><td class="imgtable"><a href="https://aterlux.ru/articles/img/fullsize/pcd8544_module2.jpg" target="_blank" title="Нажмите, чтобы посмотреть в полном размере"><img src="./_Подключение дисплея на базе контроллера PCD8544 к микроконтроллеру AVR_files/pcd8544_module2.jpg" alt="Обратная сторона модуля" class="artimg"></a></td></tr><tr width="1" class="imgtablelabel"><td class="imgtablelabel">Обратная сторона модуля</td></tr></tbody></table></p>
+<p>Передача осуществляется по протоколу SPI, но только в одном направлении. При работе с микроконтроллерами AVR, удобно использовать UART в режиме SPI-master, когда включен только передатчик. Режим SPI-3 (CPHA=1, CPOL=1). Это значит, что пока обмен отсутствует, на линии <b>SCLK</b> должен присутствовать  высокий уровень, а чтение данных с линии <b>SDIN</b> контроллер осуществляет по нарастающему фронту на линии <b>SCLK</b> в течение 100нс. При этом они должны быть выставлены минимум за 100 нс до нарастания фронта. Передача осуществляется по 8 бит, сначала старший.</p>
+<br>
+<p>Уровень на линии <b>D/C̅</b> определяет, как трактовать полученные данные. Высокий уровень означает, что переданные данные должны быть выведены на дисплей, низкий уровень – что передана команда. Контроллер читает значение на этой линии вместе с последним (младшим) битом каждого переданного байта данных. При использовании асинхронной аппаратной передачи с этим могут возникнуть трудности. Перед установкой уровня необходимо дождаться завершения передачи предыдущего байта.</p>
+<br>
+<p>Максимальная  частота, на которой может осуществляться обмен с PCD8544 – 4 МГц. При программном формировании импульсов это, обычно не является проблемой, но при использовании аппаратной передачи, в случае если частота работы МК превышает 8МГц, следует ограничить максимальную скорость передачи.</p>
+<br>
+<p>Кроме линий передачи данных, на модуле с дисплеем обычно присутствует вход управления подсветкой, соединённый с катодом светодиодов. Аноды же через ограничивающие резисторы подключены к линии питания. Для постоянно работающей подсветки можно данный вход подключить напрямую, или через резистор к «земле». Для управления от МК подсветка может быть подключена через транзистор. Поскольку подсветка потребляет менее 20мА, при подключении к МК AVR возможно также подключать её напрямую к выводу МК.</p>
+<br>
+<p><b>Пример кода взаимодействия с дисплеем</b></p>
+<pre class="code"><span class="keyword">#include</span> <span class="str">&lt;avr/io.h&gt;</span>
+
+<span class="keyword">#define</span> <span class="const">PCD8544_SCK</span> (<span class="numeric">1</span> &lt;&lt; <span class="numeric">0</span>)
+<span class="keyword">#define</span> <span class="const">PCD8544_DI</span> (<span class="numeric">1</span> &lt;&lt; <span class="numeric">1</span>)
+<span class="keyword">#define</span> <span class="const">PCD8544_DC</span> (<span class="numeric">1</span> &lt;&lt; <span class="numeric">2</span>)
+<span class="keyword">#define</span> <span class="const">PCD8544_SCE</span> (<span class="numeric">1</span> &lt;&lt; <span class="numeric">3</span>)
+<span class="keyword">#define</span> <span class="const">PCD8544_RES</span> (<span class="numeric">1</span> &lt;&lt; <span class="numeric">4</span>)
+
+<span class="keyword">void</span> <span class="method">pcd8544_send_byte</span>(<span class="keyword">uint8_t</span> <span class="var">data</span>) {
+  <span class="const">PORTD</span> &amp;= ~<span class="const">PCD8544_SCE</span>; <span class="comment">// Низкий уровень на линии SCE</span>
+  <span class="keyword">for</span> (<span class="keyword">uint8_t</span> <span class="var">i</span> = <span class="numeric">0</span>; <span class="var">i</span> &lt; <span class="numeric">8</span>; <span class="var">i</span>++) {
+    <span class="const">PORTD</span> &amp;= ~<span class="const">PCD8544_SCK</span>; <span class="comment">// Низкий уровень на линии SCK</span>
+    <span class="keyword">if</span> (<span class="var">data</span> &amp; <span class="numeric">0x80</span>) {
+      <span class="const">PORTD</span> |= <span class="const">PCD8544_DI</span>; <span class="comment">// Передача 1</span>
+    } <span class="keyword">else</span> {
+      <span class="const">PORTD</span> &amp;= ~<span class="const">PCD8544_DI</span>; <span class="comment">// Передача 0</span>
+    }
+    <span class="var">data</span> &lt;&lt;= <span class="numeric">1</span>;
+    <span class="const">PORTD</span> |= <span class="const">PCD8544_SCK</span>; <span class="comment">// Высокий уровень на линии SCK</span>
+  }
+  <span class="const">PORTD</span> |= <span class="const">PCD8544_SCE</span>; <span class="comment">// Высокий уровень на линии SCE</span>
+}
+
+<span class="keyword">void</span> <span class="method">display_data</span>(<span class="keyword">uint8_t</span> <span class="var">data</span>) {
+  <span class="const">PORTD</span> |= <span class="const">PCD8544_DC</span>; <span class="comment">// Высокий уровень на линии DC: данные</span>
+  <span class="method">pcd8544_send_byte</span>(<span class="var">data</span>);
+}
+
+<span class="keyword">void</span> <span class="method">display_cmd</span>(<span class="keyword">uint8_t</span> <span class="var">data</span>) {
+  <span class="const">PORTD</span> &amp;= ~<span class="const">PCD8544_DC</span>; <span class="comment">// Низкий уровень на линии DC: инструкция</span>
+  <span class="method">pcd8544_send_byte</span>(<span class="var">data</span>);
+}
+</pre>
+<br>
+<a name="__h2_4"></a><h2>Команды контроллера</h2>
+<br>
+<p><i>См. раздел 8 спецификации</i></p>
+<p>Команды передаются контроллеру дисплея, когда на линии <b>D/C̅</b> низкий уровень.</p>
+<p>Контроллер работает с двумя наборами команд: обычным и расширенным. </p>
+<br>
+<p><b>Команда 00100PVH</b> присутствует в обоих наборах команд. Значение бита H определяет какой набор команд будет использоваться: 0 – обычный, 1 – расширенный. Установленный бит P означает режим отключения (power-down).  V – выбирает режим адресации: 1 – вертикальная, 0 – горизонтальная.</p>
+<br>
+<a name="__h3_5"></a><h3>Обычный набор команд</h3>
+<br>
+<p>Обычный набор команд выбирается после передачи <b>00100PV0</b> (см. выше)</p>
+<p>В нём присутствуют команды:</p>
+<br>
+<p><b>Команда 00001D0E</b> - выбирает режим работы дисплея. E – признак инверсии изображения. D – признак вывода изображения. Если D = 0, дисплей либо полностью очищен (E = 0), либо полностью чёрный (E = 1)</p>
+<br>
+<p><b>Команда 01000yyy, или 0x40 + y</b> - выбор номера строки (страницы) на которую выводится изображение. Где y = 0 – самая верхняя строка, 5 – самая нижняя. Строка имеет высоту 8 пикслей.</p>
+<br>
+<p><b>Команда 1xxxxxxx, или 0x80 + x</b> - выбор горизонтальной позиции в текущей строке, куда будет выводиться изображение. Где x = 0 – самая левая позиции, 83 – самая правая. </p>
+<br>
+<a name="__h3_6"></a><h3>Расширенный набор команд</h3>
+<br>
+<p>Расширенный набор команд выбирается после передачи <b>00100PV1</b> (см. выше)</p>
+<p>В нём присутствуют команды:</p>
+<br>
+<p><b>Команда 000001tt, или 0x04 + t</b> - выбор одного из четырёх режимов температурной коррекции. В зависимости от режима будет по-разному изменяться напряжение дисплея в зависимости от температуры. </p>
+<br>
+<p><b>Команда 00010bbb, или 0x10 + b</b> - выбор одного из восьми режимов расчёта смещения уровней для управления LCD. Для обычных дисплеев от Nokia рекомендуется режим 00010011, или 0x13</p>
+<br>
+<p><b>Команда 1vvvvvvv, или 0x80 + v</b> - выбор напряжения на генераторе повышенного напряжения для LCD. При v = 0 генератор отключен. Выходное напряжение рассчитывается по формуле (см. спецификацию п.8.9):</p>
+<p></p><center>V<sub>LCD</sub> = 3.06 В + v * 0.06 В</center><p></p>
+<p>В зависимости от выбора способа коррекции напряжения, это значение изменяется в зависимости от температуры. Чтобы не повредить дисплей при низких температурах, рекомендуется чтобы это значение не превышало 8.5 Вольт, т.е. v &lt;= 90. </p>
+<p>Для обычных дисплеев Nokia это нормальное рабочее значение этого параметра примерно равно 56, т.е. команда принимает вид 10111000, или 0xB8.</p>
+<br>
+<a name="__h2_7"></a><h2>Инициализация дисплея</h2>
+<br>
+<p>Инициализация должна быть выполнена в течении 30мс после появления питания.</p>
+<br>
+<p>Дисплей инициализируется следующей последовательностью:</p>
+<p class="numberenum">1.&nbsp;Выполнить аппаратный сброс, установив на линии <b>R̅E̅S̅</b> низкий уровень минимум на 100нс;</p>
+<p class="numberenum">2.&nbsp;Включить дисплей и выбрать расширенный набор команд, послав 0x21;</p>
+<p class="numberenum">3.&nbsp;Установить схему смещения напряжения, команда 0x13;</p>
+<p class="numberenum">4.&nbsp;Установить режим температурной коррекции, команда 0x04;</p>
+<p class="numberenum">5.&nbsp;Включить генератор повышенного напряжения  на уровне 6.42 Вольта, команда 0xB8;</p>
+<p class="numberenum">6.&nbsp;Вернуться в стандартный набор команд, послав 0x20;</p>
+<p class="numberenum">7.&nbsp;Включить вывод графической информации на дисплей командой 0x0C.</p>
+<br>
+<p>После этой последовательности дисплей готов к работе.</p>
+<br>
+<p><b>Пример кода инициализации</b></p>
+<pre class="code"><span class="keyword">void</span> <span class="method">display_init</span>() {
+  <span class="const">PORTD</span> &amp;= ~<span class="const">PCD8544_RES</span>; <span class="comment">// Низкий уровень на линии RES</span>
+  <span class="const">PORTD</span> |= <span class="const">PCD8544_RES</span>;  <span class="comment">// Высокий уровень на линии RES</span>
+
+  <span class="method">display_cmd</span>(<span class="numeric">0x21</span>);	<span class="comment">// расширенный набор команд</span>
+  <span class="method">display_cmd</span>(<span class="numeric">0x80</span> + <span class="numeric">56</span>);	<span class="comment">// напряжение смещения</span>
+  
+  <span class="method">display_cmd</span>(<span class="numeric">0x04</span>);	<span class="comment">// Режим температурной коррекции 0</span>
+  <span class="method">display_cmd</span>(<span class="numeric">0x13</span>);	<span class="comment">// схема смещения 1:48</span>
+  <span class="method">display_cmd</span>(<span class="numeric">0x20</span>);	
+  <span class="method">display_cmd</span>(<span class="numeric">0x0c</span>);	<span class="comment">// Нормальное отображение</span>
+}
+</pre>
+<br>
+<a name="__h2_8"></a><h2>Вывод графической информации</h2>
+<br>
+<p>Дисплей имеет размер 84х48 пикселей. Информация выводится вертикальными блоками высотой 8 пикселей, значения которых определяются значениями бит в выводимом байте. Младший бит кодирует верхний пиксель.</p>
+<p>Таким образом, графическая область дисплея представлена в виде шести строк, каждая по 8 пикселей в высоту.</p>
+<br>
+<p>Команды 01000yyy и 1xxxxxxx определяют координаты курсора - строку и позицию, в которых будет отображены следующие 8 бит данных. После того как байт выведен, курсор смещается на соседнюю позицию.</p>
+<p>Если командой 00100PVH выбран горизонтальный режим адресации (V = 0), то курсор смещается вправо и следующий байт данных будет отображён на соседней позиции справа. Когда достигнут правый край экрана, курсор перемещается на начало следующей строки. Если же выбрана вертикальная адресация (V = 1), то курсор смещается вниз, на следующую строку, а после последней строки курсор смещается на одну горизонтальную позицию вправо и устанавливается на верхнюю строку.</p>
+<br>
+<p><b>Пример кода</b></p>
+<pre class="code"><span class="comment">// Выбирает страницу и горизонтальную позицию для вывода</span>
+<span class="keyword">void</span> <span class="method">display_setpos</span>(<span class="keyword">uint8_t</span> <span class="var">page</span>, <span class="keyword">uint8_t</span> <span class="var">x</span>) {
+  <span class="method">display_cmd</span>(<span class="numeric">0x40</span> | (<span class="var">page</span> &amp; <span class="numeric">7</span>));
+  <span class="method">display_cmd</span>(<span class="numeric">0x80</span> | <span class="var">x</span>);
+}
+
+<span class="comment">/* Очищает экран, устанавливает курсор в левый верхний угол */</span>
+<span class="keyword">void</span> <span class="method">display_clear</span>() {
+  <span class="method">display_setpos</span>(<span class="numeric">0</span>, <span class="numeric">0</span>);
+  <span class="keyword">for</span> (<span class="keyword">uint8_t</span> <span class="var">y</span> = <span class="numeric">0</span>; <span class="var">y</span> &lt; <span class="numeric">6</span>; <span class="var">y</span>++) {
+    <span class="keyword">for</span> (<span class="keyword">uint8_t</span> <span class="var">x</span> = <span class="numeric">0</span>; <span class="var">x</span> &lt; <span class="numeric">84</span>; <span class="var">x</span>++) {
+      <span class="method">display_data</span>(<span class="numeric">0</span>);
+    }    
+  }
+  <span class="method">display_setpos</span>(<span class="numeric">0</span>, <span class="numeric">0</span>);
+}
+</pre>
+<br>
+<a name="__h2_9"></a><h2>Исходный код прошивки для AtmelStudio 6</h2>
+<p>Исходный код прошивки для микроконтроллера ATmega8A доступен для скачивания здесь: <a href="https://aterlux.ru/files/NokiaDisplay.zip">zip-файл, 150 кБ</a>.</p>
+<br>
+<p>Помещённый здесь код, а также шрифты являются свободными. То есть, допускается их свободное использование для любых целей, включая коммерческие, при условии указания ссылки на автора (Погребняк Дмитрий, http://aterlux.ru/).</p>
+<br>
+<script type="text/javascript" async="" src="./_Подключение дисплея на базе контроллера PCD8544 к микроконтроллеру AVR_files/watch.js.Без названия"></script><script type="text/javascript" src="./_Подключение дисплея на базе контроллера PCD8544 к микроконтроллеру AVR_files/openapi.js.Без названия"></script>
+
+<script type="text/javascript">
+  VK.init({apiId: 3679790, onlyWidgets: true});
+</script>
+
+<div id="vk_like" style="width: 350px; height: 24px; background: none; position: relative; clear: both;"><iframe name="fXD46822" frameborder="0" src="./_Подключение дисплея на базе контроллера PCD8544 к микроконтроллеру AVR_files/widget_like.html" width="100%" height="24" scrolling="no" id="vkwidget1" style="overflow: hidden; height: 24px; width: 350px; z-index: 150;"></iframe></div>
+<script type="text/javascript">
+VK.Widgets.Like("vk_like", {type: "full", verb: 1, height: 24});
+</script>
+<br>
+<div id="vk_comments" style="width: 496px; height: 190px; background: none;"><iframe name="fXD4e426" frameborder="0" src="./_Подключение дисплея на базе контроллера PCD8544 к микроконтроллеру AVR_files/widget_comments.html" width="496" height="133" scrolling="no" id="vkwidget2" style="overflow: hidden; height: 190px;"></iframe></div>
+<script type="text/javascript">
+VK.Widgets.Comments("vk_comments", {limit: 10, width: "496", attach: "*"});
+</script>
+<br>
+</div><!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+(function (d, w, c) {
+    (w[c] = w[c] || []).push(function() {
+        try {
+            w.yaCounter21973744 = new Ya.Metrika({id:21973744,
+                    trackLinks:true});
+        } catch(e) { }
+    });
+
+    var n = d.getElementsByTagName("script")[0],
+        s = d.createElement("script"),
+        f = function () { n.parentNode.insertBefore(s, n); };
+    s.type = "text/javascript";
+    s.async = true;
+    s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js";
+
+    if (w.opera == "[object Opera]") {
+        d.addEventListener("DOMContentLoaded", f, false);
+    } else { f(); }
+})(document, window, "yandex_metrika_callbacks");
+</script>
+<noscript><div><img src="//mc.yandex.ru/watch/21973744" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+<br><font size="1" color="#C0C0C0">8 ms; mod: Sat, 12 Aug 2017 08:10:38 GMT; gen: Tue, 03 Sep 2019 07:31:15 GMT</font>
+    </td>
+   </tr>
+  </tbody></table>
+ 
+
+</body></html>

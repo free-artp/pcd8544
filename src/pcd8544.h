@@ -149,5 +149,7 @@ void lcd8544_putstr(unsigned char x, unsigned char y, const unsigned char str[],
 		// печать десятичного числа
 void lcd8544_dec(unsigned int numb, unsigned char dcount, unsigned char x, unsigned char y, unsigned char mode);
 
+void lcd8544_shift_left(unsigned char dx);
+
 #endif
 

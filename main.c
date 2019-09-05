@@ -6,6 +6,8 @@
 #include "stm32f4xx_adc.h"
 #include "stm32f4xx_dma.h"
 
+#include <math.h>
+
 #include "main.h"
 #include "pcd8544.h"
 
@@ -46,41 +48,31 @@ void delay_10us(unsigned int delay_value) {
 
 int main(void)
 {
+  int y;
 	SystemInit();
 
     SysTick_Config(SystemCoreClock/10000); // запуск systick (10 мкс)
 
     lcd8544_init(); // запуск модуля LCD
 
-
-    unsigned char y=3;
-    signed char sy=1;
-
   /* ADC configuration */
-  ADC_Config();
+    ADC_Config();
 
   /* Start ADC Software Conversion */ 
-  ADC_SoftwareStartConv(ADCx);
+    ADC_SoftwareStartConv(ADCx);
 
-
+    lcd8544_clear();
+  
     while(1)
     {
+      lcd8544_shift_left(1);
+      y = (uhADCxConvertedValue*48) >> 12;
+      lcd8544_putpix(80,(unsigned char) y,1);
+//      lcd8544_dec(uhADCxConvertedValue, 4, 0, 24, 1);
+      lcd8544_refresh();
 
-        lcd8544_clear();
+      delay_ms(200);
 
-        lcd8544_rect(0,0,83,47,1);
-
-        lcd8544_putstr(13,y,str1,1);
-//        lcd8544_putstr(15,y+10,str2,0);
-        lcd8544_dec(uhADCxConvertedValue,4,1,y+10,0);
-
-        lcd8544_putstr(2,y+21,str3,1);
-
-        lcd8544_refresh();
-
-        delay_ms(200);
-        y=y+sy;
-        if ((y==3) || (y==18)) sy=-sy;
     }
 }
 
