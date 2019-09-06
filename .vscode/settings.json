@@ -3,5 +3,10 @@
 	"cortex-debug.enableTelemetry": false,
 	"cortex-debug.JLinkGDBServerPath": "C:/Data/JLink_V640/JLinkGDBServerCL.exe",
 	"cortex-debug.armToolchainPath": "C:/tools/GNU MCU Eclipse/ARM Embedded GCC/8.2.1-1.4-20190214-0604/bin/",
-	"cortex-debug.openocdPath": "C:/tools/OpenOCD/bin/openocd.exe"
+	"cortex-debug.openocdPath": "C:/tools/OpenOCD/bin/openocd.exe",
+	"files.associations": {
+		"stm32f4xx.h": "c",
+		"stm32f4xx_gpio.h": "c",
+		"stm32f4xx_rcc.h": "c"
+	}
 }

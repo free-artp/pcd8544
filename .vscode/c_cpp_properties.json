@@ -11,6 +11,7 @@
                 "${workspaceRoot}/cmsis_boot/**",
                 "${workspaceRoot}/cmsis_lib/include/**",
                 "${workspaceRoot}/src",
+                "${workspaceRoot}/FreeRTOS/include/**",
                 "${workspaceRoot}/"
             ],
             "defines": [

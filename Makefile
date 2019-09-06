@@ -45,9 +45,16 @@ cmsis_lib/source/stm32f4xx_gpio.c \
 cmsis_lib/source/stm32f4xx_rcc.c \
 cmsis_lib/source/stm32f4xx_spi.c \
 cmsis_lib/source/stm32f4xx_adc.c \
-src/pcd8544.c
-
-
+src/pcd8544.c \
+FreeRTOS/croutine.c \
+FreeRTOS/event_groups.c  \
+FreeRTOS/heap_2.c  \
+FreeRTOS/list.c  \
+FreeRTOS/port.c  \
+FreeRTOS/queue.c  \
+FreeRTOS/stream_buffer.c  \
+FreeRTOS/tasks.c  \
+FreeRTOS/timers.c
 
 # ASM sources
 ASM_SOURCES =  \
@@ -104,11 +111,12 @@ AS_INCLUDES =
 
 # C includes
 C_INCLUDES =  \
--I./cmsis \
--I./cmsis_boot \
--I./cmsis_lib/include \
--I./src \
--I./ \
+-Icmsis \
+-Icmsis_boot \
+-Icmsis_lib/include \
+-IFreeRTOS/include \
+-Isrc \
+-I. \
 
 
 # compile gcc flags

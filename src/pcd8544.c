@@ -5,9 +5,15 @@
 #include "stm32f4xx_dma.h"
 #include "misc.h"
 
-#include "../main.h"         // из модуля импортируется вызов delay_ms(unsigned int ms); - задержка в милисекундах
+//#include "../main.h"         // из модуля импортируется вызов delay_ms(unsigned int ms); - задержка в милисекундах
 #include "pcd8544.h"
 #include "font6x8.h"	  // шрифт
+
+#include "FreeRTOSConfig.h"
+#include "FreeRTOS.h"
+#include "task.h"
+
+#define	delay_ms(x)	(vTaskDelay( x / portTICK_PERIOD_MS))
 
 
 unsigned char lcd8544_buff[84*6]; // буфер дисплея

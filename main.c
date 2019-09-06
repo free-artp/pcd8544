@@ -6,6 +6,22 @@
 #include "stm32f4xx_adc.h"
 #include "stm32f4xx_dma.h"
 
+/*******************************************************************/
+//#include "stm32f4xx.h"
+#include "stm32f4xx_conf.h"
+#include "system_stm32f4xx.h"
+#include "FreeRTOSConfig.h"
+#include "FreeRTOS.h"
+#include "portmacro.h"
+#include "croutine.h"
+#include "task.h"
+#include "queue.h"
+//#include "stm32f4xx_gpio.h"
+//#include "stm32f4xx_rcc.h"
+ 
+/*******************************************************************/
+
+
 #include <math.h>
 
 #include "main.h"
@@ -17,63 +33,36 @@ __IO uint16_t uhADCxConvertedValue = 0;
 __IO uint32_t uwADCxConvertedVoltage = 0;
 static void ADC_Config(void);
 
+void vDisplayTask(void *par){
 
-
-// Переменные и структуры
-volatile unsigned int delay_val;        // счетчик для delay_ms()
-volatile unsigned int counter1000;      // счетчик интервалов (такт 10 мкс)
-
-// прерывание SysTick - отсчет 10 мкс интервалов
-void SysTick_Handler(void) {
-	if (delay_val>0) delay_val--;
-	counter1000++;
-}
-
-
-// реализация задержки на delay_value милисекунд
-void delay_ms(unsigned int delay_value) {
-	delay_val=delay_value*10;
-	while (delay_val!=0);
-}
-
-// реализация задержки на delay_value в * 10 мкс
-void delay_10us(unsigned int delay_value) {
-	delay_val=delay_value;
-	while (delay_val!=0);
-}
-
-// const unsigned char str1[]="NOKIA 5110";
-// const unsigned char str2[]="СТАРТОВАЛ";
-// const unsigned char str3[]="РУССКИЕ БУКВЫ!";
-
-int main(void)
-{
+  const TickType_t xDelay = 200 / portTICK_PERIOD_MS;  /* Block for 200ms. */
   int y;
-	SystemInit();
 
-    SysTick_Config(SystemCoreClock/10000); // запуск systick (10 мкс)
-
-    lcd8544_init(); // запуск модуля LCD
-
-  /* ADC configuration */
-    ADC_Config();
-
-  /* Start ADC Software Conversion */ 
-    ADC_SoftwareStartConv(ADCx);
-
-    lcd8544_clear();
-  
-    while(1)
-    {
+  while(1){
       lcd8544_shift_left(1);
       y = (uhADCxConvertedValue*48) >> 12;
       lcd8544_putpix(80,(unsigned char) y,1);
 //      lcd8544_dec(uhADCxConvertedValue, 4, 0, 24, 1);
       lcd8544_refresh();
+      vTaskDelay( xDelay );
+  }
+  vTaskDelete(NULL);
+}
 
-      delay_ms(200);
+int main(void)
+{
+	SystemInit();
+  SysTick_Config(SystemCoreClock/10000); // запуск systick (10 мкс)
 
-    }
+  lcd8544_init(); // запуск модуля LCD
+  lcd8544_clear();
+
+  ADC_Config();  /* ADC configuration */
+  ADC_SoftwareStartConv(ADCx);  /* Start ADC Software Conversion */ 
+
+  xTaskCreate(vDisplayTask,"DisplayTask", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 1, NULL);
+  vTaskStartScheduler();
+
 }
 
 /**
@@ -174,3 +163,37 @@ void assert_failed(uint8_t* file, uint32_t line)
 }
 #endif
 
+/*******************************************************************/
+void vApplicationIdleHook( void )
+{
+}
+ 
+ 
+ 
+/*******************************************************************/
+void vApplicationMallocFailedHook( void )
+{
+    for( ;; );
+}
+ 
+ 
+ 
+/*******************************************************************/
+void vApplicationStackOverflowHook( xTaskHandle pxTask, signed char *pcTaskName )
+{
+    ( void ) pcTaskName;
+    ( void ) pxTask;
+ 
+    for( ;; );
+}
+ 
+ 
+ 
+/*******************************************************************/
+void vApplicationTickHook( void )
+{
+}
+ 
+ 
+ 
+/*******************************************************************/

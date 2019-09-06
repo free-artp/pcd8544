@@ -1,7 +1,7 @@
 #ifndef __MAIN_H
 #define __MAIN_H
 
-void delay_ms(unsigned int delay_value);
+//void delay_ms(unsigned int delay_value);
 
 // #define ADCx                     ADC3
 // #define ADC_CHANNEL              ADC_Channel_8
