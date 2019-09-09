@@ -13,8 +13,11 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
-#define	delay_ms(x)	(vTaskDelay( x / portTICK_PERIOD_MS))
+//#define	delay_ms(x)	(vTaskDelay( x / portTICK_PERIOD_MS))
 
+void delay_ms( int d) {
+	for ( d*=100000; d >0 ; d--);
+}
 
 unsigned char lcd8544_buff[84*6]; // буфер дисплея
 
