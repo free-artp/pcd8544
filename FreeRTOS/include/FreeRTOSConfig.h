@@ -45,10 +45,10 @@
 #ifdef __ICCARM__
 	#include <stdint.h>
 	extern uint32_t SystemCoreClock;
-#endif
-
-//	#include <stdint.h>
+#elif __GNUC__
+	#include <stdint.h>
 	extern uint32_t SystemCoreClock;
+#endif
 
 #define configUSE_PREEMPTION			1
 #define configUSE_IDLE_HOOK				1
