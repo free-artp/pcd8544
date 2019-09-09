@@ -7,7 +7,7 @@
 #include "stm32f4xx_dma.h"
 
 /*******************************************************************/
-//#include "stm32f4xx.h"
+
 #include "stm32f4xx_conf.h"
 #include "system_stm32f4xx.h"
 #include "FreeRTOSConfig.h"
@@ -16,8 +16,6 @@
 #include "croutine.h"
 #include "task.h"
 #include "queue.h"
-//#include "stm32f4xx_gpio.h"
-//#include "stm32f4xx_rcc.h"
  
 /*******************************************************************/
 
@@ -70,8 +68,8 @@ int main(void)
   * @note   This function Configure the ADC peripheral  
             1) Enable peripheral clocks
             2) DMA2_Stream0 channel2 configuration
-            3) Configure ADC Channel7 pin as analog input
-            4) Configure ADC3 Channel7 
+            3) Configure ADC Channel1 pin as analog input
+            4) Configure ADC3 Channel1 
   * @param  None
   * @retval None
   */
@@ -87,6 +85,7 @@ static void ADC_Config(void)
   RCC_AHB1PeriphClockCmd(ADCx_CHANNEL_GPIO_CLK, ENABLE);  
   RCC_APB2PeriphClockCmd(ADCx_CLK, ENABLE);
   
+
 
   /* DMA2 Stream0 channel2 configuration **************************************/
   DMA_InitStructure.DMA_Channel = DMA_CHANNELx;  
