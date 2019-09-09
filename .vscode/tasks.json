@@ -7,12 +7,14 @@
 			"command": "make -s -j 10 all",
 			"options": {
 				"cwd": "${workspaceRoot}",
-				"shell": {
-					"executable": "cmd.exe",
-					"args": [
-						"/C"
-					]
-				}
+				"windows": {
+					"shell": {
+						"executable": "cmd.exe",
+						"args": [
+							"/C"
+						]
+					},
+				},
 			},
 			"group": {
 				"kind": "build",
@@ -28,11 +30,13 @@
 			"command": "make -s clean",
 			"options": {
 				"cwd": "${workspaceRoot}",
-				"shell": {
-					"executable": "cmd.exe",
-					"args": [
-						"/C"
-					]
+				"windows" : {
+					"shell": {
+						"executable": "cmd.exe",
+						"args": [
+							"/C"
+						]
+					}
 				}
 			},
 			"group": {
@@ -48,16 +52,18 @@
 				"command": "openocd -f board/stm32f4discovery.cfg -c \"program ./build/${workspaceFolderBasename}.elf verify reset exit\""
 			},
 			"linux": {
-				"command": ""
+				"command": "openocd -f board/stm32f4discovery.cfg -c \"program ./build/${workspaceFolderBasename}.elf verify reset exit\""
 			},
 			"options": {
 				"cwd": "${workspaceRoot}",
-				"shell": {
-					"executable": "cmd.exe",
-					"args": [
-						"/C"
-					]
-				}
+				"windows": {
+					"shell": {
+						"executable": "cmd.exe",
+						"args": [
+							"/C"
+						]
+					},
+				},
 			},
 			"group": {
 				"kind": "test",
@@ -71,12 +77,14 @@
 			"command": "start openocd -f ./board/stm32f4discovery.cfg -f ./board/STM32F407.svd",
 			"options": {
 				"cwd": "${workspaceRoot}",
-				"shell": {
-					"executable": "cmd.exe",
-					"args": [
-						"/C"
-					]
-				}
+				"windows": {
+					"shell": {
+						"executable": "cmd.exe",
+						"args": [
+							"/C"
+						]
+					},
+				},
 			},
 			"group": {
 				"kind": "test",

@@ -1,7 +1,32 @@
 {
     "configurations": [
         {
-            "name": "arm_c_cpp_properties",
+            "name":"Linux",
+            "compilerPath": "/opt/gnu-mcu-eclipse/arm-none-eabi-gcc/8.2.1-1.4-20190214-0604/bin/arm-none-eabi-gcc",
+            "includePath": [
+                "/opt/gnu-mcu-eclipse/arm-none-eabi-gcc/8.2.1-1.4-20190214-0604/arm-none-eabi/include",
+                "/opt/gnu-mcu-eclipse/arm-none-eabi-gcc/8.2.1-1.4-20190214-0604/arm-none-eabi/include/sys",
+                "/opt/gnu-mcu-eclipse/arm-none-eabi-gcc/8.2.1-1.4-20190214-0604/lib/**",
+                "${workspaceRoot}/cmsis/**",
+                "${workspaceRoot}/cmsis_boot/**",
+                "${workspaceRoot}/cmsis_lib/include/**",
+                "${workspaceRoot}/src",
+                "${workspaceRoot}/FreeRTOS/include/**",
+                "${workspaceRoot}/"
+            ],
+            "defines": [
+				"STM32F407VG",
+                "STM32F4XX",
+                "USE_STDPERIPH_DRIVER",
+				"M4",
+				"GCC_ARMCM4"
+            ],
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+			"intelliSenseMode": "gcc-x64"
+        },
+        {
+            "name":"windows",
             "compilerPath": "C:/tools/GNU MCU Eclipse/ARM Embedded GCC/8.2.1-1.4-20190214-0604/bin/arm-none-eabi-gcc.exe",
             "includePath": [
                 "C:/tools/GNU MCU Eclipse/ARM Embedded GCC/8.2.1-1.4-20190214-0604/arm-none-eabi/include",
